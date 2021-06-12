@@ -1,6 +1,5 @@
-from plexapi.server import PlexServer
-
 from opset import config
+from plexapi.server import PlexServer
 
 plex_client = None
 

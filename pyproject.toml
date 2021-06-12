@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "plexsnake"
+version = "1.0.0"
+description = "Plexsnake, a collection of python scripts for Plex"
+authors = ["Alexandre Jutras <jutras.alexandre@gmail.com>"]
+
+packages = [
+    {include = "snake"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+opset = "^2.0.0"
+typer = "^0.3.2"
+PlexAPI = "^4.2.0"
+
+[tool.poetry.dev-dependencies]
+coverage = "^5.1"
+flake8 = "^3.8.2"
+black = "^19.10b0"
+flake8-black = "^0.2.0"
+isort = { version = "^4.3.21", extras = ["pyproject"] }
+flake8-isort = "^3.0.0"
+autoflake = "^1.4"
+pandas = "^1.1.5"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+line_length = 120
+multi_line_output = 3
+use_parentheses = true
+case_sensitive = true
+include_trailing_comma = true
+
+[build-system]
+requires = ["poetry>=1.1.4"]
+build-backend = "poetry.masonry.api"

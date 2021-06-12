@@ -3,15 +3,14 @@ from datetime import datetime
 from typing import Dict, List, Union
 
 import typer
-from opset import setup_config, config
+from opset import setup_config
 from plexapi.library import MovieSection, ShowSection
-from plexapi.video import Season, Movie
+from plexapi.video import Movie, Season
 
 from snake.constants import Operator
+from snake.plex import models as plex_models  # noqa
 from snake.plex import plexcodex
 from snake.utils import chronos
-from snake.plex import models as plex_models  # noqa
-
 
 log = logging.getLogger(__name__)
 

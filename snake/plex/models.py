@@ -1,5 +1,5 @@
 from plexapi.library import MovieSection, ShowSection
-from plexapi.video import Movie, Show, Season
+from plexapi.video import Movie, Season, Show
 
 from snake.utils import format_number
 

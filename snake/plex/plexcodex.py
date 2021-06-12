@@ -1,13 +1,12 @@
 import logging
-from typing import Union, List, Dict, Any
+from typing import Any, Dict, List, Union
 
 from opset import config
 from plexapi.library import MovieSection, MusicSection, PhotoSection, ShowSection
 from plexapi.video import Movie, Season
 
-from snake.constants import Operator, SECTION_TYPE
+from snake.constants import SECTION_TYPE, Operator
 from snake.plex.client import get_plex_client
-
 
 log = logging.getLogger(__name__)
 
@@ -20,8 +19,7 @@ def get_library(name: str) -> Union[MovieSection, ShowSection, MusicSection, Pho
 
 
 def list_libraries(
-    filter_type: Union[SECTION_TYPE, List[SECTION_TYPE]] = None,
-    whitelisted_libraries: List[str] = None
+    filter_type: Union[SECTION_TYPE, List[SECTION_TYPE]] = None, whitelisted_libraries: List[str] = None
 ) -> List[Union[MovieSection, ShowSection, MusicSection, PhotoSection]]:
     whitelisted_libraries = whitelisted_libraries or [ws for ws in config.whitelisted_libraries]
 
@@ -58,7 +56,7 @@ def list_movies(
     sort: str = None,
     max_results: int = None,
     advanced_filters: Union[Dict[str, Any], List[Dict[str, Any]]] = None,
-    **kwargs
+    **kwargs,
 ) -> List[Movie]:
     """
     List movies from a MovieSection.
@@ -93,12 +91,7 @@ def list_movies(
 
     log.info(f"Searching into library [{movie_library.title}]..")
 
-    for movie in movie_library.search(
-        title=title,
-        sort=sort,
-        maxresults=max_results,
-        **kwargs
-    ):
+    for movie in movie_library.search(title=title, sort=sort, maxresults=max_results, **kwargs):
         skip: bool = False
         for advanced_filter in advanced_filters:
             movie_value = getattr(movie, advanced_filter["attribute"])
@@ -130,7 +123,7 @@ def list_seasons(
     sort: str = None,
     max_results: int = None,
     advanced_filters: Union[Dict[str, Any], List[Dict[str, Any]]] = None,
-    **kwargs
+    **kwargs,
 ) -> List[Season]:
     """
     List tv show seasons from a TV show library.
@@ -152,12 +145,7 @@ def list_seasons(
 
     log.info(f"Searching into library [{show_library.title}]..")
 
-    for show in show_library.search(
-        title=title,
-        sort=sort,
-        maxresults=max_results,
-        **kwargs
-    ):
+    for show in show_library.search(title=title, sort=sort, maxresults=max_results, **kwargs):
         for season in show:
 
             skip: bool = False
