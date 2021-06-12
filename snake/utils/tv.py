@@ -1,6 +1,5 @@
-import os
 import re
-from typing import Any, Dict, List, Optional, Union, Tuple
+from typing import Optional, Tuple, Union
 
 from snake.utils import format_number
 
@@ -36,7 +35,7 @@ def extract_episode_tag(filename: str, return_as_upper: bool = True) -> Tuple[Op
     if not matches:
         return None, None
 
-    splitted_tag = matches[0].split('e')
+    splitted_tag = matches[0].split("e")
     season_tag = splitted_tag[0].upper() if return_as_upper else splitted_tag[0]
     episode_tag = f"E{splitted_tag[1]}" if return_as_upper else f"e{splitted_tag[1]}"
 

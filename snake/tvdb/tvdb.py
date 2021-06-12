@@ -7,13 +7,12 @@ from opset import config
 
 from snake.tvdb.models import Episode, Season, Show
 
-
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 current_token: Optional[str] = None
 token_creation_time: Optional[datetime] = None
-fed_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODAxMDI3MDQsImlkIjoiSGl0cmVuYW1lciIsIm9yaWdfaWF0IjoxNTc5NDk3OTA0LCJ1c2VyaWQiOjIyNTAyMTAsInVzZXJuYW1lIjoiZmxhcHBlciJ9.apfgC5MA0vvjZOvtPsIHJR7bBWP6GR79OUupCvUbd4bq04-2M4ASkJ9Y_hfxAqoXWzEA1m0j8wf9GyGuR-M9l6o-udmTwgAkRQ57_qBeflHTBpZ7sbe2Ufi3LGb-U_l7gp352H_Eik4C2YvizbTcq_zNnkapnaC-5yfg7nn29FEJgs7Xs7R5k5qcyqYQzMyLGhydBMUvBpT5jip0wL0z4a4rFnmB4IX2ZFQaowZ5ib_sVknQ89-ZGvgaJ8wNyfJtipCGKF8y_sXMsBDUnanmwzsvy65fvwfmBVCcHM4zd6amvakaaJdxq9xIAu5l6OBiVnBleq-ZCl-ZyWT0l_izHg"
+fed_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODAxMDI3MDQsImlkIjoiSGl0cmVuYW1lciIsIm9yaWdfaWF0IjoxNTc5NDk3OTA0LCJ1c2VyaWQiOjIyNTAyMTAsInVzZXJuYW1lIjoiZmxhcHBlciJ9.apfgC5MA0vvjZOvtPsIHJR7bBWP6GR79OUupCvUbd4bq04-2M4ASkJ9Y_hfxAqoXWzEA1m0j8wf9GyGuR-M9l6o-udmTwgAkRQ57_qBeflHTBpZ7sbe2Ufi3LGb-U_l7gp352H_Eik4C2YvizbTcq_zNnkapnaC-5yfg7nn29FEJgs7Xs7R5k5qcyqYQzMyLGhydBMUvBpT5jip0wL0z4a4rFnmB4IX2ZFQaowZ5ib_sVknQ89-ZGvgaJ8wNyfJtipCGKF8y_sXMsBDUnanmwzsvy65fvwfmBVCcHM4zd6amvakaaJdxq9xIAu5l6OBiVnBleq-ZCl-ZyWT0l_izHg"  # noqa
 fed_token_creation_time = datetime.now(tz=timezone.utc)
 
 
@@ -63,12 +62,11 @@ def get_headers() -> Dict:
 
 def auth() -> str:
     """Get TVDB API Token."""
-    result = requests.post(f"{config.tvdb.host}/login",
-                           json={
-                               "apikey": config.tvdb.api_key,
-                               "username": config.tvdb.user,
-                               "userkey": config.tvdb.userkey
-                           }, timeout=20)
+    result = requests.post(
+        f"{config.tvdb.host}/login",
+        json={"apikey": config.tvdb.api_key, "username": config.tvdb.user, "userkey": config.tvdb.userkey},
+        timeout=20,
+    )
     result.raise_for_status()
 
     auth_answer = result.json()
@@ -84,20 +82,16 @@ def refresh_token() -> str:
 
 
 def get_episodes_raw(show_id: int, page: int = 1) -> List[Dict]:
-    result = requests.get(f"{config.tvdb.host}/series/{show_id}/episodes",
-                          headers=get_headers(),
-                          params={
-                              "page": page
-                          }, timeout=7)
+    result = requests.get(
+        f"{config.tvdb.host}/series/{show_id}/episodes", headers=get_headers(), params={"page": page}, timeout=7
+    )
     result.raise_for_status()
 
     return result.json()["data"]
 
 
 def get_show_raw(show_id: Union[int, str]) -> Dict:
-    result = requests.get(f"{config.tvdb.host}/series/{show_id}",
-                          headers=get_headers(),
-                          timeout=7)
+    result = requests.get(f"{config.tvdb.host}/series/{show_id}", headers=get_headers(), timeout=7)
     result.raise_for_status()
 
     return result.json()["data"]
@@ -113,7 +107,7 @@ def get_show(show_id: Union[int, str]) -> Show:
         description="",
         total_seasons=show_raw["season"],
         seasons=get_seasons(show_id),
-        total_episodes=0
+        total_episodes=0,
     )
 
 
@@ -138,7 +132,7 @@ def get_seasons(show_id: Union[int, str]) -> List[Season]:
     # Create seasons and episodes, associate them
     for episode in episodes_raw:
         season_no = episode["airedSeason"]
-        episode_no = episode['airedEpisodeNumber']
+        episode_no = episode["airedEpisodeNumber"]
         episode_title = episode["episodeName"]
         episode_description = episode["overview"]
 
@@ -147,12 +141,14 @@ def get_seasons(show_id: Union[int, str]) -> List[Season]:
 
         season = next((season for season in seasons if season.no == season_no))
 
-        season.episodes.append(Episode(
-            no=int(episode_no),
-            season=int(season_no),
-            title=episode_title or "",
-            description=episode_description or ""
-        ))
+        season.episodes.append(
+            Episode(
+                no=int(episode_no),
+                season=int(season_no),
+                title=episode_title or "",
+                description=episode_description or "",
+            )
+        )
 
     # sort seasons
     seasons = sorted(seasons, key=lambda season: season.no)
