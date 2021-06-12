@@ -1,0 +1,14 @@
+plex:
+  api_endpoint:
+  token:
+
+
+logging:
+  date_format: "ISO"
+  use_utc: True
+  min_level: "INFO"
+  disable_processors: False
+  use_colors: False
+
+
+whitelisted_libraries: ""
