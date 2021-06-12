@@ -3,6 +3,13 @@ plex:
   token:
 
 
+tvdb:
+  host: "https://api.thetvdb.com"
+  user:
+  userkey:
+  api_key:
+
+
 logging:
   date_format: "ISO"
   use_utc: True
